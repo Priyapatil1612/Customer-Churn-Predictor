@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler
 import pickle
 import matplotlib.pyplot as plt
 
-with open("/Users/priyapatil/PriyaWork/Python/lr_model.pkl", "rb") as file:
+with open("lr_model.pkl", "rb") as file:
     loaded_model = pickle.load(file)
 
 
