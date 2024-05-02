@@ -1,1 +1,8 @@
-sklearn matplotlib seaborn xgboost random streamlit pickle pandas 
+scikit-learn
+matplotlib
+seaborn
+xgboost
+random
+streamlit
+pickle
+pandas
