@@ -78,49 +78,51 @@ def plot_feature_importance_pie(feature_importance):
     st.pyplot(plt)
 
 # Function to predict churn based on input data
-def predict_churn(final_df):
-    pred = loaded_model.predict(final_df) 
-    time.sleep(2)
+# def predict_churn(final_df):
+#     pred = loaded_model.predict(final_df) 
+#     time.sleep(2)
 
-     # Display prediction result
-    if pred == 0:
-        return "This customer is unlikely to churn!"
-    else:
-        return "This customer is likely to churn!"
+#      # Display prediction result
+#     if pred == 0:
+#         return "This customer is unlikely to churn!"
+#     else:
+#         return "This customer is likely to churn!"
 
-
+# Function to show prediction result and analysis plot
 def show_prediction_result(final_df):
     selected_features = ['AccountAge', 'MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'ContentDownloadsPerMonth', 'GenrePreference', 'UserRating', 'SupportTicketsPerMonth', 'WatchlistSize']
     st.write("") 
     with st.spinner('Predicting...'):
-        # Simulate prediction process (replace with actual prediction code)
-        pred =  loaded_model.predict(final_df) # Randomly choose between 0 and 1
-        time.sleep(2)  # Simulated delay to mimic prediction process
+        pred =  loaded_model.predict(final_df) 
+        time.sleep(2)  
         
-    # Display prediction result
+    # Display the result in form of string
     if pred == 0:
         st.success("This customer is unlikely to churn!")
     else:
         st.error("This customer is likely to churn!")
 
-    # Get feature importance
+
     feature_importance = pd.DataFrame({'Feature': selected_features, 'Importance': loaded_model.coef_[0]})
     feature_importance['Importance'] = feature_importance['Importance'].abs()  # Taking absolute values
 
-    # Plot feature importance
+    # Ploting the bar chart and pie chart
     st.subheader('Impact of each feature affecting the churn decision.')
     plot_feature_importance_bar(feature_importance)
     plot_feature_importance_pie(feature_importance)
 
 
-
+# Main function to run the Streamlit web application
 def main():
+    # App title
     st.title('Customer Churn Predictor')
-    
+
+    # Input fields for Customer Details
     st.subheader('Customer Details') 
     customer_id = st.text_input('Customer ID', '')
     gender = st.radio('Gender', ['Male', 'Female'])
-   
+
+    # Input fields for User Preferences
     st.subheader('User Preferences')
     device_registered = st.selectbox('Device Registered', ['Mobile','Tablet','TV','Computer'])
     md_access = st.radio('Multi-Device Access', ['Yes','No'])
@@ -128,15 +130,18 @@ def main():
     genre = st.selectbox('Genre', ['Sci-Fi','Drama','Action','Comedy','Fantasy'])
     parental_control = st.radio('Parental Control', ['Yes','No'])
     subtitles = st.radio('Enable Subtitles', ['Yes','No'])
-    
+
+    # Input fields for Billing Information
     st.subheader('Billing Information')
     subscription = st.radio('Subscription Type', ['Premium','Standard','Basic'])
     payment = st.selectbox('Payment Method', ['Mailed check', 'Credit card', 'Electronic check', 'Bank transfer'])
     paperless = st.radio('Parperless-Billing', ['Yes','No'])
     
+    # Input field for User Rating
     st.subheader('User Rating') 
     user_rating = st.slider('User Rating (1 - 5)', 1.0, 5.0, step=0.01, format="%.2f")
-       
+
+    # Button to trigger prediction
     if st.button('Predict'):
         #with st.spinner('Predicting...'):
             accountage = random.randint(1,119)
