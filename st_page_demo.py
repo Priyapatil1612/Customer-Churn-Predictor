@@ -12,10 +12,10 @@ import random
 from sklearn.preprocessing import StandardScaler
 import pickle
 import matplotlib.pyplot as plt
+import time
 
 with open("lr_model.pkl", "rb") as file:
     loaded_model = pickle.load(file)
-
 
 def pre_process(df):
     cols_float = ['MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'UserRating']
@@ -70,50 +70,80 @@ def plot_feature_importance_pie(feature_importance):
     plt.title('Feature Importance')
     st.pyplot(plt)
 
+def predict_churn(final_df):
+    # Simulate prediction process (replace with actual prediction code)
+    pred = random.choice([0, 1])  # Randomly choose between 0 and 1
     
-def main():
-   st.title('Customer Churn Predictor')
+    # Simulated delay to mimic prediction process
+    time.sleep(2)
     
-   st.subheader('Customer Details') 
-   customer_id = st.text_input('Customer ID', '')
-   gender = st.radio('Gender', ['Male', 'Female'])
-   
-   st.subheader('User Prefernces')
-   device_registered = st.selectbox('Device Registered', ['Mobile','Tablet','TV','Computer'])
-   md_access = st.radio('Multi-Device Access', ['Yes','No'])
-   content_type = st.selectbox('Content Type', ['TV Shows','Movies','Both']) 
-   genre = st.selectbox('Genre', ['Sci-Fi','Drama','Action','Comedy','Fantasy'])
-   parental_control = st.radio('Parental Control', ['Yes','No'])
-   subtitles = st.radio('Enable Subtitles', ['Yes','No'])
-    
-   st.subheader('Billing Information')
-   subscription = st.radio('Subscription Type', ['Premium','Standard','Basic'])
-   payment = st.selectbox('Payment Method', ['Mailed check', 'Credit card', 'Electronic check', 'Bank transfer'])
-   paperless = st.radio('Parperless-Billing', ['Yes','No'])
-    
-   st.subheader('User Rating') 
-   user_rating = st.slider('User Rating (1 - 5)', 1.0, 5.0, step=0.01, format="%.2f")
-       
+    # Display prediction result
+    if pred == 0:
+        return "This customer is unlikely to churn!"
+    else:
+        return "This customer is likely to churn!"
 
-   col1,col2,col3,col4, col5 = st.columns([1, 2, 1,2,1])
-   with col3:
-       if st.button('Predict'):
-               st.success('Redirecting to the next page...')
-               # Here you can define what happens when the "Next" button is clicked
-               # For now, let's just print out the customer ID and gender
-               print(f'Customer ID: {customer_id}')
-               print(f'Gender Preferences: {gender}')
-                
-               accountage = random.randint(1,119)
-               monthly_charges = random.uniform(4.99, 19.98)
-               total_charges = random.uniform(4.99, 2378.72)   
-               viewing_hrs_perweek = random.uniform(1,39.99)
-               average_viewing = random.uniform(5,179.99) 
-               content_download = random.randint(0,49)  
-               support_tickets = random.randint(0,9) 
-               watchlist_size = random.randint(0,24) 
-               
-               data = {
+
+def show_prediction_result(final_df):
+    selected_features = ['AccountAge', 'MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'ContentDownloadsPerMonth', 'GenrePreference', 'UserRating', 'SupportTicketsPerMonth', 'WatchlistSize']
+    st.write("")  # Add some space
+    with st.spinner('Predicting...'):
+        # Simulate prediction process (replace with actual prediction code)
+        pred = random.choice([0, 1])  # Randomly choose between 0 and 1
+        time.sleep(2)  # Simulated delay to mimic prediction process
+        
+    # Display prediction result
+    if pred == 0:
+        st.success("This customer is unlikely to churn!")
+    else:
+        st.error("This customer is likely to churn!")
+
+    # Get feature importance
+    feature_importance = pd.DataFrame({'Feature': selected_features, 'Importance': loaded_model.coef_[0]})
+    feature_importance['Importance'] = feature_importance['Importance'].abs()  # Taking absolute values
+
+    # Plot feature importance
+    st.subheader('Impact of each feature affecting the churn decision.')
+    plot_feature_importance_bar(feature_importance)
+    plot_feature_importance_pie(feature_importance)
+
+
+
+def main():
+    st.title('Customer Churn Predictor')
+    
+    st.subheader('Customer Details') 
+    customer_id = st.text_input('Customer ID', '')
+    gender = st.radio('Gender', ['Male', 'Female'])
+   
+    st.subheader('User Preferences')
+    device_registered = st.selectbox('Device Registered', ['Mobile','Tablet','TV','Computer'])
+    md_access = st.radio('Multi-Device Access', ['Yes','No'])
+    content_type = st.selectbox('Content Type', ['TV Shows','Movies','Both']) 
+    genre = st.selectbox('Genre', ['Sci-Fi','Drama','Action','Comedy','Fantasy'])
+    parental_control = st.radio('Parental Control', ['Yes','No'])
+    subtitles = st.radio('Enable Subtitles', ['Yes','No'])
+    
+    st.subheader('Billing Information')
+    subscription = st.radio('Subscription Type', ['Premium','Standard','Basic'])
+    payment = st.selectbox('Payment Method', ['Mailed check', 'Credit card', 'Electronic check', 'Bank transfer'])
+    paperless = st.radio('Parperless-Billing', ['Yes','No'])
+    
+    st.subheader('User Rating') 
+    user_rating = st.slider('User Rating (1 - 5)', 1.0, 5.0, step=0.01, format="%.2f")
+       
+    if st.button('Predict'):
+        #with st.spinner('Predicting...'):
+            accountage = random.randint(1,119)
+            monthly_charges = random.uniform(4.99, 19.98)
+            total_charges = random.uniform(4.99, 2378.72)   
+            viewing_hrs_perweek = random.uniform(1,39.99)
+            average_viewing = random.uniform(5,179.99) 
+            content_download = random.randint(0,49)  
+            support_tickets = random.randint(0,9) 
+            watchlist_size = random.randint(0,24) 
+           
+            data = {
                 'AccountAge' : [accountage],
                 'MonthlyCharges' : [monthly_charges],
                 'TotalCharges':[total_charges],
@@ -133,31 +163,13 @@ def main():
                 'WatchlistSize':[watchlist_size],
                 'ParentalControl': [parental_control],
                 'SubtitlesEnabled': [subtitles]
-                #'CustomerID': [customer_id],
-                 }
+            }
+
+            df = pd.DataFrame(data)
+            processed_df = pre_process(df)
+            selected_features = ['AccountAge', 'MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'ContentDownloadsPerMonth', 'GenrePreference', 'UserRating', 'SupportTicketsPerMonth', 'WatchlistSize']
+            final_df = processed_df[selected_features]
             
-               df = pd.DataFrame(data)
-               processed_df = pre_process(df)
-               #st.write(processed_df)
-               selected_features = ['AccountAge', 'MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'ContentDownloadsPerMonth', 'GenrePreference', 'UserRating', 'SupportTicketsPerMonth', 'WatchlistSize']
-               final_df = processed_df[selected_features]
-               #st.write(final_df)
-               
-               pred = loaded_model.predict(final_df)
-               st.write(pred)
-               
-               # Get feature importance
-               feature_importance = pd.DataFrame({'Feature': selected_features, 'Importance': loaded_model.coef_[0]})
-               feature_importance['Importance'] = feature_importance['Importance'].abs()  # Taking absolute values
-                
-                # Plot feature importance
-               st.subheader('Feature Importance')
-               plot_feature_importance_bar(feature_importance)
-               plot_feature_importance_pie(feature_importance)
-
+            show_prediction_result(final_df)
 if __name__ == "__main__":
-   main()
-    
-
-
-
+    main()
