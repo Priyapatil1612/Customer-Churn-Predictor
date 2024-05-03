@@ -6,6 +6,7 @@ Created on Wed Apr 17 23:56:09 2024
 @author: priyapatil
 """
 
+# Importing necessary libraries
 import streamlit as st
 import pandas as pd
 import random
@@ -14,13 +15,17 @@ import pickle
 import matplotlib.pyplot as plt
 import time
 
+# Loading the trained model
 with open("lr_model.pkl", "rb") as file:
     loaded_model = pickle.load(file)
 
+# Function to preprocess the input data
 def pre_process(df):
+    # Set Proper Precision : Round float columns to 2 decimal places
     cols_float = ['MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'UserRating']
     df[cols_float] = df[cols_float].round(2)
-    
+
+    # Label Encoding : Mapping categorical values to numerical values
     cols_to_encode = ['SubscriptionType', 'PaymentMethod', 'PaperlessBilling', 'ContentType', 'MultiDeviceAccess', 'DeviceRegistered', 'GenrePreference', 'Gender', 'ParentalControl', 'SubtitlesEnabled']
     
     for col in cols_to_encode:
@@ -55,7 +60,8 @@ def pre_process(df):
             df['SubtitlesEnabled'] = df['SubtitlesEnabled'].map({'No': 0, 'Yes': 1})
   
     return df
-    
+
+# Function to plot feature importance as bar chart
 def plot_feature_importance_bar(feature_importance):
     plt.figure(figsize=(10, 6))
     plt.barh(feature_importance['Feature'], feature_importance['Importance'], color='skyblue')
@@ -64,20 +70,19 @@ def plot_feature_importance_bar(feature_importance):
     plt.title('Feature Importance')
     st.pyplot(plt)
 
+# Function to plot feature importance as pie chart
 def plot_feature_importance_pie(feature_importance):
     plt.figure(figsize=(8, 8))
     plt.pie(feature_importance['Importance'], labels=feature_importance['Feature'], autopct='%1.1f%%', startangle=140, colors=plt.cm.tab20.colors)
     plt.title('Feature Importance')
     st.pyplot(plt)
 
+# Function to predict churn based on input data
 def predict_churn(final_df):
-    # Simulate prediction process (replace with actual prediction code)
-    pred = loaded_model.predict(final_df)  # Randomly choose between 0 and 1
-    
-    # Simulated delay to mimic prediction process
+    pred = loaded_model.predict(final_df) 
     time.sleep(2)
-    
-    # Display prediction result
+
+     # Display prediction result
     if pred == 0:
         return "This customer is unlikely to churn!"
     else:
@@ -86,10 +91,10 @@ def predict_churn(final_df):
 
 def show_prediction_result(final_df):
     selected_features = ['AccountAge', 'MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'ContentDownloadsPerMonth', 'GenrePreference', 'UserRating', 'SupportTicketsPerMonth', 'WatchlistSize']
-    st.write("")  # Add some space
+    st.write("") 
     with st.spinner('Predicting...'):
         # Simulate prediction process (replace with actual prediction code)
-        pred = random.choice([0, 1])  # Randomly choose between 0 and 1
+        pred =  loaded_model.predict(final_df) # Randomly choose between 0 and 1
         time.sleep(2)  # Simulated delay to mimic prediction process
         
     # Display prediction result
