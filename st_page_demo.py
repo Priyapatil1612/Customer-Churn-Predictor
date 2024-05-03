@@ -72,7 +72,7 @@ def plot_feature_importance_pie(feature_importance):
 
 def predict_churn(final_df):
     # Simulate prediction process (replace with actual prediction code)
-    pred = random.choice([0, 1])  # Randomly choose between 0 and 1
+    pred = loaded_model.predict(final_df)  # Randomly choose between 0 and 1
     
     # Simulated delay to mimic prediction process
     time.sleep(2)
