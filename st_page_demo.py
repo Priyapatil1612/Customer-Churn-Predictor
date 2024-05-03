@@ -77,17 +77,6 @@ def plot_feature_importance_pie(feature_importance):
     plt.title('Feature Importance')
     st.pyplot(plt)
 
-# Function to predict churn based on input data
-# def predict_churn(final_df):
-#     pred = loaded_model.predict(final_df) 
-#     time.sleep(2)
-
-#      # Display prediction result
-#     if pred == 0:
-#         return "This customer is unlikely to churn!"
-#     else:
-#         return "This customer is likely to churn!"
-
 # Function to show prediction result and analysis plot
 def show_prediction_result(final_df):
     selected_features = ['AccountAge', 'MonthlyCharges', 'TotalCharges', 'ViewingHoursPerWeek', 'AverageViewingDuration', 'ContentDownloadsPerMonth', 'GenrePreference', 'UserRating', 'SupportTicketsPerMonth', 'WatchlistSize']
